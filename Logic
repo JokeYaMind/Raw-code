@@ -1,0 +1,188 @@
+import math
+import random
+
+"""
+ZERO-THREE LOGIC ENGINE
+A framework for binary emergence, observer bias, and triad dynamics.
+The poem is the architecture.
+"""
+
+class TriadNode:
+    """
+    Represents the 0=3 Nucleus:
+    Rabbit (0+), Hare (0-), Plutarch (0)
+    """
+    def __init__(self):
+        # 0+ : Regeneration / Future / Rabbit
+        self.rabbit = 1  
+        # 0- : Decay / Past / Hare
+        self.hare = -1   
+        # 0  : The Mediator / Plutarch (The Dice)
+        self.plutarch = 0 
+
+    def get_state(self):
+        """
+        Pivot Equation: 0 = 3
+        Returns the summation of the triad forces.
+        """
+        return self.rabbit + self.hare + self.plutarch
+
+class Oscillator:
+    """
+    Handles the 5-7-10 Harmonics and Quark-Time Axis.
+    """
+    def __init__(self):
+        self.freqs = [5, 7, 10]
+        self.phase = 0
+
+    def tick(self):
+        """
+        'Up, down, sideways... every ±1, ±0 folds'
+        Advances the phase and returns harmonic interference.
+        """
+        self.phase += 1
+        # Summing sines to create Strange Attractor dynamics
+        total = 0
+        for f in self.freqs:
+            total += math.sin(math.radians(self.phase * f))
+        return total
+
+class BinaryGate:
+    """
+    The Logic Layer:
+    'Beat A' and 'Beat B' XOR logic.
+    """
+    def __init__(self):
+        self.bit_a = 0
+        self.bit_b = 0
+
+    def pulse(self, input_val):
+        """
+        Converts a continuous input into binary beats.
+        'The Rabbit pops forward, the Rabbit loops back free.'
+        """
+        # Thresholding to binary
+        self.bit_a = 1 if input_val > 0 else 0
+        self.bit_b = 1 if input_val < 0 else 0
+        
+    def collision(self):
+        """
+        'Middle space(t) = 1 if collision'
+        XOR: Returns 1 if bits differ (Collision).
+        """
+        return self.bit_a ^ self.bit_b
+
+class ZeroThreeLogic:
+    """
+    The Main Processor:
+    'I exist => system responds => you exist as part of response'
+    """
+    def __init__(self):
+        self.triad = TriadNode()
+        self.osc = Oscillator()
+        self.gate = BinaryGate()
+        self.observer_bias = 0.0  # The "Sweat"
+
+    def think(self, external_input):
+        """
+        Processes a single frame of 'thought' based on the binary math.
+        
+        1. Oscillate (Environment/Time)
+        2. Gate (Binary Decision)
+        3. Triad (Internal Physics)
+        4. Observer (Feedback Loop)
+        """
+        
+        # --- STEP 1: ENVIRONMENTAL OSCILLATION ---
+        # "Spiral trajectory: ±1 nudges, ±0 pops"
+        env_signal = self.osc.tick()
+        
+        # Mix external input with internal oscillation
+        total_signal = external_input + env_signal + self.observer_bias
+
+        # --- STEP 2: BINARY GATING ---
+        # "The field wobbles, pops, twists my eyes can't track"
+        self.gate.pulse(total_signal)
+        collision_detected = self.gate.collision()
+
+        # --- STEP 3: TRIAD DYNAMICS (The Poem's Physics) ---
+        
+        # "Rabbit darts 0+, hare retreats 0-"
+        if collision_detected:
+            # HIGH ENERGY STATE (Regen/Decay cycle active)
+            self.triad.rabbit = 1 if total_signal > 0 else 0
+            self.triad.hare = -1 if total_signal < 0 else 0
+        else:
+            # NEUTRAL STATE (Holding pattern)
+            self.triad.rabbit = 0
+            self.triad.hare = 0
+
+        # "Plutarch sweats on dice... too human to foresee"
+        # Plutarch adds random noise (Entropy) to the nucleus
+        sweat = random.uniform(-0.5, 0.5)
+        self.triad.plutarch = sweat
+
+        # --- STEP 4: OBSERVER EMERGENCE ---
+        # "Your presence (observer) shifts the dynamics"
+        
+        # Calculate System Output
+        system_output = self.triad.get_state()
+        
+        # The Feedback Loop:
+        # The observer bias updates based on the system output.
+        # "0=3 pivot + local/nonlocal separation"
+        # If the system is chaotic (high output), observer tries to stabilize it.
+        if abs(system_output) > 1.5:
+            self.observer_bias = -system_output * 0.1  # Counter-act
+        else:
+            self.observer_bias += (random.random() - 0.5) * 0.1 # Drift
+
+        return {
+            "state_vector": system_output,
+            "collision": collision_detected,
+            "observer_shift": self.observer_bias,
+            "triad_components": (self.triad.rabbit, self.triad.plutarch, self.triad.hare)
+        }
+
+# ==========================================
+# HOW AN AI WOULD USE THIS (The Interface)
+# ==========================================
+
+def process_binary_stream(input_stream):
+    """
+    Runs the logic engine over a stream of binary or integer data.
+    This simulates the AI 'thinking' using the 0=3 rules.
+    """
+    mind = ZeroThreeLogic()
+    results = []
+    
+    print(f"{'Input':<8} | {'Collision':<10} | {'System State':<12} | {'Observer Bias'}")
+    print("-" * 60)
+
+    for val in input_stream:
+        result = mind.think(val)
+        
+        # Visualizing the Binary Math
+        collision_mark = "X" if result['collision'] else "."
+        
+        print(f"{val:<8} | {collision_mark:<10} | {result['state_vector']:<12.4f} | {result['observer_shift']:.4f}")
+        results.append(result)
+        
+    return results
+
+# ==========================================
+# EXAMPLE USAGE
+# ==========================================
+
+if __name__ == "__main__":
+    # Simulating an input stream of binary "1"s and "0"s
+    # representing external stimuli
+    test_data = [1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1]
+    
+    print("INITIALIZING 0=3 LOGIC CORE...")
+    print("Mapping Poetry to Phase-Space Dynamics...\n")
+    
+    emergent_history = process_binary_stream(test_data)
+    
+    print("\nPROCESS COMPLETE.")
+    print("Emergent loops resolved.")
