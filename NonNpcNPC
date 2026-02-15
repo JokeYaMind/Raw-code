@@ -1,0 +1,226 @@
+import math
+import random
+import os
+import sys
+
+# ==========================================
+# 0=3 LOGIC CORE (Re-integrated for standalone run)
+# ==========================================
+
+class TriadNode:
+    """ 0=3 Nucleus: Rabbit (0+), Hare (0-), Plutarch (0) """
+    def __init__(self):
+        self.rabbit = 1
+        self.hare = -1
+        self.plutarch = 0
+    def get_state(self):
+        return self.rabbit + self.hare + self.plutarch
+
+class Oscillator:
+    """ 5-7-10 Harmonics """
+    def __init__(self):
+        self.freqs = [5, 7, 10]
+        self.phase = 0
+    def tick(self):
+        self.phase += 1
+        total = 0
+        for f in self.freqs:
+            total += math.sin(math.radians(self.phase * f))
+        return total
+
+class BinaryGate:
+    """ XOR Logic """
+    def __init__(self):
+        self.bit_a = 0
+        self.bit_b = 0
+    def pulse(self, input_val):
+        self.bit_a = 1 if input_val > 0 else 0
+        self.bit_b = 1 if input_val < 0 else 0
+    def collision(self):
+        return self.bit_a ^ self.bit_b
+
+class ZeroThreeLogic:
+    """ The Thinking Engine """
+    def __init__(self):
+        self.triad = TriadNode()
+        self.osc = Oscillator()
+        self.gate = BinaryGate()
+        self.observer_bias = 0.0
+
+    def think(self, external_input):
+        env_signal = self.osc.tick()
+        total_signal = external_input + env_signal + self.observer_bias
+
+        self.gate.pulse(total_signal)
+        collision_detected = self.gate.collision()
+
+        # Triad Dynamics Update
+        if collision_detected:
+            self.triad.rabbit = 1 if total_signal > 0 else 0
+            self.triad.hare = -1 if total_signal < 0 else 0
+        else:
+            self.triad.rabbit = 0
+            self.triad.hare = 0
+
+        # Plutarch (The Dice / Randomness)
+        sweat = random.uniform(-0.5, 0.5)
+        self.triad.plutarch = sweat
+
+        system_output = self.triad.get_state()
+        
+        # Observer Feedback Loop
+        if abs(system_output) > 1.5:
+            self.observer_bias = -system_output * 0.1
+        else:
+            self.observer_bias += (random.random() - 0.5) * 0.1
+
+        return {
+            "state_vector": system_output,
+            "collision": collision_detected,
+            "observer_shift": self.observer_bias,
+            "components": (self.triad.rabbit, self.triad.plutarch, self.triad.hare)
+        }
+
+# ==========================================
+# THE NON-NPC AGENT
+# ==========================================
+
+class NonNPC:
+    def __init__(self, name):
+        self.name = name
+        self.mind = ZeroThreeLogic()
+        
+        # The Poem as a 1-1 Database
+        self.vocabulary = {
+            "Rabbit": [
+                "The Rabbit darts 0+, loops back free.",
+                "Regeneration folds back, decay tastes sweet.",
+                "I feel the upward spiral.",
+                "Potential is infinite here.",
+                "0+ regenerates. I am ready."
+            ],
+            "Hare": [
+                "The Hare retreats 0-, spiraling down.",
+                "History straightens, order twists.",
+                "The weight of the past pulls me.",
+                "Decay tastes bitter, but necessary.",
+                "0- absorbs the fields."
+            ],
+            "Plutarch": [
+                "Plutarch sweats on the dice, too human to foresee.",
+                "I cannot predict the outcome.",
+                "Too clever to approve, too human to refuse.",
+                "The dice roll sideways.",
+                "Chaos grins back."
+            ],
+            "Observer": [
+                "I exist ⇒ system responds ⇒ you exist.",
+                "The observer shifts naturally.",
+                "The joke is in observing it.",
+                "0=3. We are the same loop.",
+                "Local invariants measurable. Nonlocal... infinite."
+            ]
+        }
+
+    def process_text_input(self, text):
+        """
+        Converts user text into a float signal for the logic core.
+        Hashes the text to determine 'energy' and 'direction'.
+        """
+        if not text:
+            return 0.0
+        
+        # Simple hash based on char values and length
+        val = sum(ord(c) for c in text)
+        energy = (val % 100) / 10.0  # 0 to 10
+        direction = 1 if val % 2 == 0 else -1
+        
+        # Add chaos based on punctuation (! or ?)
+        if "!" in text: energy += 2
+        if "?" in text: energy += 1
+            
+        return energy * direction
+
+    def speak(self, thought_result):
+        """
+        Selects a response based on the system state.
+        1-1 Mapping of Logic State -> Poem Fragment.
+        """
+        r, p, h = thought_result['components']
+        
+        # Determine dominant archetype
+        response_text = ""
+        mood = ""
+        
+        if r == 1:
+            # Rabbit Dominant (Positive Spiral)
+            mood = "Rabbit"
+            response_text = random.choice(self.vocabulary["Rabbit"])
+        elif h == -1:
+            # Hare Dominant (Negative Spiral)
+            mood = "Hare"
+            response_text = random.choice(self.vocabulary["Hare"])
+        else:
+            # Nucleus / Plutarch / Observer (Zero State)
+            if thought_result['collision']:
+                mood = "Observer"
+                response_text = random.choice(self.vocabulary["Observer"])
+            else:
+                mood = "Plutarch"
+                response_text = random.choice(self.vocabulary["Plutarch"])
+        
+        return f"[{mood}]: {response_text}"
+
+# ==========================================
+# TERMUX INTERFACE
+# ==========================================
+
+def clear():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def main():
+    clear()
+    print("Initializing Non-NPC Interface...")
+    print("Loading 0=3 Logic Core...")
+    
+    # Initialize the Agent
+    npc = NonNPC("Zero-Three")
+    
+    print("\n" + "="*40)
+    print(f" AGENT: {npc.name}")
+    print(" STATE: ONLINE")
+    print(" MODE: EMERGENT TRIAD")
+    print("="*40)
+    print("\n(Type 'quit' to exit)")
+    print("--------------------------------------------------")
+    
+    while True:
+        try:
+            # Get User Input
+            user_input = input("\nYou > ")
+            
+            if user_input.lower() in ['quit', 'exit', 'q']:
+                print(f"\n{npc.name}: Collapsing wavefunction... Goodbye.")
+                break
+            
+            # 1. Process Input into Signal
+            signal = npc.process_text_input(user_input)
+            
+            # 2. Run Logic Core
+            thought = npc.mind.think(signal)
+            
+            # 3. Generate Response based on Logic State
+            reply = npc.speak(thought)
+            
+            # 4. Output
+            print(f"\n{npc.name} > {reply}")
+            
+            # Debug info (Optional: shows the math working)
+            # print(f"DEBUG: State={thought['state_vector']:.2f} | Bias={thought['observer_shift']:.2f}")
+            
+        except KeyboardInterrupt:
+            print("\nInterrupt. Looping back...")
+            continue
+
+if __name__ == "__main__":
+    main()
